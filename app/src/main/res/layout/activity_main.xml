@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:paddingTop="48dp"
-    android:background="@drawable/blue_gradient_background"
+    android:background="#F9F9F9"
     tools:context=".MainActivity">
 
     <TextView
@@ -18,14 +18,13 @@
         android:layout_marginTop="50dp"
         android:layout_marginBottom="40dp"
         android:clickable="false"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:gravity="center"
         android:text="Explore Finnish Municipalities"
         android:textAllCaps="false"
-        android:textColor="#FFFCFC"
+        android:textColor="@color/black"
         android:textSize="24sp" />
 
-    <!-- Search Card -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +44,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="8dp"
-                app:srcCompat="@drawable/search_icon" />
+                app:srcCompat="@drawable/ic_search" />
 
             <EditText
                 android:id="@+id/municipalitySearchText"
@@ -92,7 +91,7 @@
         android:fontFamily="@font/poppins"
         android:gravity="left"
         android:text="Recent Searches"
-        android:textColor="#FFFFFF"
+        android:textColor="#5F5B5B"
         android:textSize="18sp" />
 
     <androidx.recyclerview.widget.RecyclerView

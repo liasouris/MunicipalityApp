@@ -20,29 +20,25 @@ public class WeatherFragment extends Fragment {
     private final DataRetriever dataRetriever = new DataRetriever();
 
     @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(
-                R.layout.fragment_weather, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_weather, container, false);
 
-        imageWeatherIcon      = view.findViewById(R.id.imageWeatherIcon);
-        municipalityNameTv    = view.findViewById(R.id.textMunicipalityName);
-        weatherMainTv         = view.findViewById(R.id.textWeatherMain);
+        imageWeatherIcon = view.findViewById(R.id.imageWeatherIcon);
+        municipalityNameTv = view.findViewById(R.id.textMunicipalityName);
+        weatherMainTv = view.findViewById(R.id.textWeatherMain);
         weatherDescriptionTv  = view.findViewById(R.id.textWeatherDescription);
-        temperatureTv         = view.findViewById(R.id.textTemperature);
-        windSpeedTv           = view.findViewById(R.id.textWindSpeed);
+        temperatureTv = view.findViewById(R.id.textTemperature);
+        windSpeedTv = view.findViewById(R.id.textWindSpeed);
 
         Bundle args = getArguments();
-        final String muni = (args != null && args.containsKey("municipality"))
-                ? args.getString("municipality")
-                : "Helsinki";
+
+        final String muni = (args != null && args.containsKey("municipality")) ? args.getString("municipality") : "Helsinki";
 
         municipalityNameTv.setText(muni);
 
         new Thread(() -> {
             try {
-                Weather wd = dataRetriever.getWeatherData(muni);
+                WeatherData wd = dataRetriever.getWeatherData(muni);
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> updateUI(wd));
                 }
@@ -55,23 +51,18 @@ public class WeatherFragment extends Fragment {
     }
 
 
-    private void updateUI(Weather wd) {
+    private void updateUI(WeatherData wd) {
         municipalityNameTv.setText(wd.getCityName());
         weatherMainTv.setText(wd.getMain());
         weatherDescriptionTv.setText(wd.getDescription());
 
-
         double k = Double.parseDouble(wd.getTemperature());
+
         temperatureTv.setText(String.format("%.1f°C", k - 273.15));
+        windSpeedTv.setText("Wind " + wd.getWindSpeed() + " m/s");
 
-        windSpeedTv.setText(wd.getWindSpeed() + " m/s");
+        String iconUrl = "https://openweathermap.org/img/wn/" + wd.getIcon() + "@2x.png";
 
-        String iconUrl = "https://openweathermap.org/img/wn/"
-                + wd.getIcon()
-                + "@2x.png";
-
-        Glide.with(this)
-                .load(iconUrl)
-                .into(imageWeatherIcon);
+        Glide.with(this).load(iconUrl).into(imageWeatherIcon);
     }
 }

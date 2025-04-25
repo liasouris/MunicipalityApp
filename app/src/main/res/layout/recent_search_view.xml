@@ -17,8 +17,8 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
-        <ImageButton
-            android:id="@+id/recentSearchButton"
+        <ImageView
+            android:id="@+id/recentSearchIcon"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginEnd="16dp"

@@ -1,6 +1,6 @@
 package com.example.courseprojectolio;
 
-public class Weather {
+public class WeatherData {
     private String name;
     private String main;
     private String description;
@@ -9,20 +9,20 @@ public class Weather {
 
     private String icon;
 
-    public Weather(String name, String main, String description, String temperature, String windSpeed, String icon) {
+    public WeatherData(String name, String main, String description, String temperature, String windSpeed, String icon) {
         this.name = name;
         this.main = main;
         this.description = description;
         this.temperature = temperature;
         this.windSpeed = windSpeed;
-        this.icon        = icon;
+        this.icon = icon;
 
     }
 
     public String getCityName() {
         return name;
     }
-    public void   setCityName(String cityName) {
+    public void setCityName(String cityName) {
         this.name = cityName;
     }
 
