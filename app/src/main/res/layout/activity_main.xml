@@ -79,7 +79,7 @@
             android:fontFamily="@font/poppins"
             android:padding="12dp"
             android:text="Fetch Data"
-            android:textColor="#494747"
+            android:textColor="#313030"
             android:textSize="16sp" />
     </androidx.cardview.widget.CardView>
 
