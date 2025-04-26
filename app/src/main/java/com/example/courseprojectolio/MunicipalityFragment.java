@@ -24,6 +24,7 @@ import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Anchor;
 import com.anychart.graphics.vector.Stroke;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -63,24 +64,36 @@ public class MunicipalityFragment extends Fragment {
 
         executor.execute(() -> {
             DataRetriever retriever = new DataRetriever();
-            MunicipalityData data = retriever.getMunicipalityData(requireContext(), municipality);
-            List<DataRetriever.PopulationData> populationHistory = retriever.getPopulationHistory(requireContext(), municipality);
+            MunicipalityData data = null;
+            try {
+                data = retriever.getMunicipalityData(requireContext(), municipality);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            List<DataRetriever.PopulationData> populationHistory = null;
+            try {
+                populationHistory = retriever.getPopulationHistory(requireContext(), municipality);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
+            MunicipalityData finalData = data;
+            List<DataRetriever.PopulationData> finalPopulationHistory = populationHistory;
             mainHandler.post(() -> {
-                if (data == null) {
+                if (finalData == null) {
                     popTv.setText("Population: –");
                     popChangeTv.setText("Population Growth: –");
                     empRateTv.setText("Employment Rate: –%");
                     selfSuffTv.setText("Job Self-Sufficiency: –%");
                 } else {
-                    popTv.setText(String.format("Population: %.0f", data.getPopulation()));
-                    popChangeTv.setText(String.format("Population Growth: %.0f", data.getPopulationGrowth()));
-                    empRateTv.setText(String.format("Employment Rate: %.1f%%", data.getEmploymentRate()));
-                    selfSuffTv.setText(String.format("Job Self-Sufficiency: %.1f%%", data.getSelfSufficiency()));
+                    popTv.setText(String.format("Population: %.0f", finalData.getPopulation()));
+                    popChangeTv.setText(String.format("Population Growth: %.0f", finalData.getPopulationGrowth()));
+                    empRateTv.setText(String.format("Employment Rate: %.1f%%", finalData.getEmploymentRate()));
+                    selfSuffTv.setText(String.format("Job Self-Sufficiency: %.1f%%", finalData.getSelfSufficiency()));
                 }
 
-                if (populationHistory != null && !populationHistory.isEmpty()) {
-                    setupPopulationChart(populationHistory);
+                if (finalPopulationHistory != null && !finalPopulationHistory.isEmpty()) {
+                    setupPopulationChart(finalPopulationHistory);
                 }
             });
         });
