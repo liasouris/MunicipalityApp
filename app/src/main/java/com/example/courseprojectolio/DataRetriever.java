@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DataRetriever {
     // Weather APIs
-    private static final String API_KEY = "3edf2211d0ca2323cc0f328f285584ad";
+    private static final String API_KEY = "";
     private static final String CONVERT_URL = "https://api.openweathermap.org/geo/1.0/direct?q=%s&limit=5&appid=%s";
     private static final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s";
 
