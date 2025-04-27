@@ -38,7 +38,7 @@ public class TabActivity extends AppCompatActivity {
                             tab.setText("Weather");
                             break;
                         case 2:
-                            tab.setText("Home");
+                            tab.setText("Compare");
                             break;
                     }
                 }

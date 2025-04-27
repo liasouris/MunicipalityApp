@@ -1,11 +1,14 @@
 package com.example.courseprojectolio;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -117,7 +120,7 @@ public class MunicipalityFragment extends Fragment {
         Mapping growthMapping = set.mapAs("{ x: 'x', value: 'growth' }");
         Line growthSeries = cartesian.line(growthMapping);
         growthSeries.name("Growth %");
-        growthSeries.stroke("4 #FF0000");
+        growthSeries.stroke("4 #6305dc");
 
         chartView.setChart(cartesian);
     }

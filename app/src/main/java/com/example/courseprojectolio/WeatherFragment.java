@@ -26,7 +26,7 @@ public class WeatherFragment extends Fragment {
         imageWeatherIcon = view.findViewById(R.id.imageWeatherIcon);
         municipalityNameTv = view.findViewById(R.id.textMunicipalityName);
         weatherMainTv = view.findViewById(R.id.textWeatherMain);
-        weatherDescriptionTv  = view.findViewById(R.id.textWeatherDescription);
+        weatherDescriptionTv = view.findViewById(R.id.textWeatherDescription);
         temperatureTv = view.findViewById(R.id.textTemperature);
         windSpeedTv = view.findViewById(R.id.textWindSpeed);
 
@@ -55,14 +55,11 @@ public class WeatherFragment extends Fragment {
         municipalityNameTv.setText(wd.getCityName());
         weatherMainTv.setText(wd.getMain());
         weatherDescriptionTv.setText(wd.getDescription());
-
-        double k = Double.parseDouble(wd.getTemperature());
-
-        temperatureTv.setText(String.format("%.1f°C", k - 273.15));
-        windSpeedTv.setText("Wind " + wd.getWindSpeed() + " m/s");
+        String celsius = wd.convertToCelsiusFromKelvin(wd.getTemperature());
+        temperatureTv.setText(celsius + "°C");
+        windSpeedTv.setText("Wind " + wd.getWindSpeed() + " m/s");
 
         String iconUrl = "https://openweathermap.org/img/wn/" + wd.getIcon() + "@2x.png";
-
         Glide.with(this).load(iconUrl).into(imageWeatherIcon);
     }
 }

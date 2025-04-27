@@ -27,9 +27,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DataRetriever {
     // Weather APIs
-    private static final String API_KEY = "1703bdfd503c84d8e12227cd540f8262";
-    private static final String GEOCODING_URL = "https://api.openweathermap.org/geo/1.0/direct?q=%s,FI&limit=5&appid=%s";
-    private static final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&units=metric";
+    private static final String API_KEY = "3edf2211d0ca2323cc0f328f285584ad";
+    private static final String CONVERT_URL = "https://api.openweathermap.org/geo/1.0/direct?q=%s&limit=5&appid=%s";
+    private static final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s";
 
     // Municipality APIs
     private static final String POPULATION_URL = "https://pxdata.stat.fi:443/PxWeb/api/v1/fi/StatFin/synt/statfin_synt_pxt_12dy.px";
@@ -170,35 +170,36 @@ public class DataRetriever {
         return history;
     }
 
-    public WeatherData getWeatherData(String municipality) throws IOException {
-        if (municipality == null || municipality.trim().isEmpty()) {
-            throw new IllegalArgumentException("Municipality name cannot be empty");
+    public WeatherData getWeatherData(String municipality) {
+        try {
+            String q = Uri.encode(municipality.trim());
+            String geoEndpoint = String.format(CONVERT_URL, q, API_KEY);
+            JsonNode areas = objectMapper.readTree(new URL(geoEndpoint));
+
+            if (!areas.isArray() || areas.isEmpty()) {
+                throw new RuntimeException("No geocoding result for " + municipality);
+            }
+            JsonNode loc = areas.get(0);
+
+            String latitude  = loc.get("lat").asText();
+            String longitude = loc.get("lon").asText();
+
+            String weatherEndpoint = String.format(WEATHER_URL, latitude, longitude, API_KEY);
+            JsonNode weatherJson = objectMapper.readTree(new URL(weatherEndpoint));
+            JsonNode w0 = weatherJson.get("weather").get(0);
+
+            return new WeatherData(
+                    weatherJson.get("name").asText(),
+                    w0.get("main").asText(),
+                    w0.get("description").asText(),
+                    weatherJson.get("main").get("temp").asText(),
+                    weatherJson.get("wind").get("speed").asText(),
+                    w0.get("icon").asText()
+            );
+
+        } catch (IOException|NullPointerException e) {
+            throw new RuntimeException("Failed to fetch weather for " + municipality, e);
         }
-
-        String encoded = Uri.encode(municipality.trim());
-        String geoUrl = String.format(GEOCODING_URL, encoded, API_KEY);
-        JsonNode geoArr = objectMapper.readTree(new URL(geoUrl));
-
-        if (!geoArr.isArray() || geoArr.isEmpty()) {
-            throw new RuntimeException("No geocoding result for " + municipality);
-        }
-
-        JsonNode loc = geoArr.get(0);
-        double lat = loc.get("lat").asDouble();
-        double lon = loc.get("lon").asDouble();
-
-        String weatherUrl = String.format(WEATHER_URL, lat, lon, API_KEY);
-        JsonNode wj = objectMapper.readTree(new URL(weatherUrl));
-        JsonNode w0 = wj.get("weather").get(0);
-
-        return new WeatherData(
-                wj.get("name").asText(),
-                w0.get("main").asText(),
-                w0.get("description").asText(),
-                wj.get("main").get("temp").asText(),
-                wj.get("wind").get("speed").asText(),
-                w0.get("icon").asText()
-        );
     }
 
     private JsonNode postJson(String urlString, JsonNode jsonBody) throws IOException {

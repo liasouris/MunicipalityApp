@@ -58,8 +58,18 @@ public class WeatherData {
 
     public void   setIcon(String icon) {
         this.icon = icon;
+
     }
 
+    public String convertToCelsiusFromKelvin(String temperature){
+        double kelvin = Double.parseDouble(temperature);
+        double celsius = kelvin - 273.15;
+        long rounded = Math.round(celsius);
+        return String.valueOf(rounded);
+    }
 }
+
+
+
 
 
